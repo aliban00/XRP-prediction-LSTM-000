@@ -8,12 +8,17 @@ class TestPredictor(unittest.TestCase):
         Tests the architecture search method.
         """
         predictor = Predictor()
-        model = predictor.search_architecture(None)
+
+        # Create some dummy training data
+        train_sequences = [torch.randn(12, 10) for _ in range(10)]
+        train_labels = [torch.randn(1, 1) for _ in range(10)]
+
+        model = predictor.search_architecture(train_sequences, train_labels)
 
         self.assertIsNotNone(model)
 
         # Test the forward pass
-        input_tensor = torch.randn(1, 1)
+        input_tensor = torch.randn(1, 12, 10)
         output = model(input_tensor)
         self.assertEqual(output.shape, (1, 1))
 

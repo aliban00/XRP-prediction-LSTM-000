@@ -2,6 +2,7 @@ import pandas as pd
 import yaml
 import numpy as np
 import lingam
+import ta
 from rich.console import Console
 
 console = Console()
@@ -37,8 +38,12 @@ class Analyst:
 
         if causal_method == 'lingam':
             console.log("Starting causal discovery with VARMA-LiNGAM algorithm...")
-            model = lingam.VARMALiNGAM()
-            model.fit(data)
+            model = lingam.VARMALiNGAM(max_iter=50) # Reduce max_iter for performance
+            try:
+                model.fit(data)
+            except Exception as e:
+                console.log(f"[bold red]Error in VARMA-LiNGAM: {e}[/bold red]")
+                return None
             console.log("Causal discovery complete.")
             return model
         else:
@@ -102,3 +107,15 @@ class Analyst:
             }
 
         return results
+
+    def engineer_features(self, data: pd.DataFrame):
+        """
+        Engineers features for the model.
+        """
+        console.log("Engineering features...")
+        # Add all ta features
+        data = ta.add_all_ta_features(
+            data, open="open", high="high", low="low", close="close", volume="volume"
+        )
+        console.log("Feature engineering complete.")
+        return data

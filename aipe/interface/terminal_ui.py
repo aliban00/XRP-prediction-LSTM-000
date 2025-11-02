@@ -31,15 +31,16 @@ class TerminalUI:
                 table.add_row(var, f"{values['hurst']:.4f}", f"{values['lyapunov']:.4f}")
             console.print(table)
 
-        # Display Predictor insights (placeholders)
+        # Display Predictor insights
         console.print("\n[bold blue]The Predictor: Architecture Evolution[/bold blue]")
-        console.print("Current architecture: [Attention(heads=4) → LSTM(256) → Dense(128)]")
+        prediction = predictor_results.get('prediction')
+        if prediction:
+            console.print(f"Prediction: {prediction:.2f}")
 
         # Display Philosopher insights (placeholders)
         console.print("\n[bold yellow]The Philosopher: Strategic Learning[/bold yellow]")
-        console.print("Analyzed 347 recent predictions:")
-        console.print("  • Success pattern: Low volatility regimes (89% accuracy)")
-
-        # Display Prediction (placeholders)
-        console.print("\n[bold red]Prediction[/bold red]")
-        console.print("Next 6 hours: ↑ 2.3% (confidence: 0.78, range: [1.8%, 2.9%])")
+        outcomes = philosopher_results.get('outcomes')
+        if outcomes:
+            console.print("Counterfactual Outcomes:")
+            for outcome in outcomes:
+                console.print(f"  - {outcome}")

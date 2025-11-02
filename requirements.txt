@@ -17,3 +17,5 @@ PyYAML>=6.0
 hmmlearn>=0.3.0
 lingam>=1.5.2
 ruptures>=1.1.7
+ccxt>=4.0.53
+ta>=0.10.2

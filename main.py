@@ -1,10 +1,13 @@
-import pandas as pd
-import numpy as np
+from aipe.data.market_data import get_market_data
 from aipe.interface.orchestrator import Orchestrator
 
 if __name__ == "__main__":
-    # Create a dummy dataset for demonstration purposes
-    data = pd.DataFrame(np.random.rand(100, 3), columns=['X', 'Y', 'Z'])
+    # Download real market data for XRP/USDT
+    data = get_market_data(ticker="XRP/USDT", timeframe='1d', limit=500)
 
-    orchestrator = Orchestrator()
-    orchestrator.run(data)
+    if data is not None:
+        # We'll use multiple features for our analysis
+        data_for_aipe = data[['open', 'high', 'low', 'close', 'volume']]
+
+        orchestrator = Orchestrator(data_for_aipe)
+        orchestrator.run(data_for_aipe)

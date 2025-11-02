@@ -16,7 +16,7 @@ class Philosopher:
             console.log(f"[bold red]Error: Configuration file not found at {config_path}[/bold red]")
             self.config = {}
 
-    def reason_counterfactually(self, prediction, actual, context):
+    def reason_counterfactually(self, model, prediction, actual, context):
         """
         Performs counterfactual reasoning.
         """
@@ -25,7 +25,7 @@ class Philosopher:
         counterfactual_depth = self.config.get('philosopher', {}).get('counterfactual_depth', 3)
 
         console.log(f"Reasoning counterfactually (depth: {counterfactual_depth})...")
-        outcomes = counterfactual_analysis(prediction, actual, context)
+        outcomes = counterfactual_analysis(model, prediction, actual, context)
 
         return outcomes
 
@@ -68,3 +68,12 @@ class Philosopher:
 
         distilled_knowledge = distill(model, compression_ratio=compression_ratio, rule_extraction=rule_extraction)
         return distilled_knowledge
+
+    def backtest(self, model, test_sequences, test_labels, scaler, close_idx):
+        """
+        Backtests the model on historical data.
+        """
+        from aipe.intelligence.backtesting import backtest as bt
+
+        avg_mape = bt(model, test_sequences, test_labels, scaler, close_idx)
+        return avg_mape

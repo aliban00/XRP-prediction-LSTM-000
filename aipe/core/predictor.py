@@ -1,4 +1,5 @@
 import yaml
+import torch
 from rich.console import Console
 
 console = Console()
@@ -16,25 +17,14 @@ class Predictor:
             console.log(f"[bold red]Error: Configuration file not found at {config_path}[/bold red]")
             self.config = {}
 
-    def search_architecture(self, data):
+    def search_architecture(self, train_sequences, train_labels):
         """
         Performs neural architecture search.
         """
-        from aipe.intelligence.architecture_search import SearchableArchitecture
+        import os
+        from aipe.intelligence.architecture_search import find_best_architecture, NASModel
 
-        search_space = self.config.get('predictor', {}).get('architecture_search', {}).get('search_space', [])
-        max_layers = self.config.get('predictor', {}).get('architecture_search', {}).get('max_layers', 8)
-
-        if not search_space:
-            console.log("[bold red]Error: Search space not defined in configuration.[/bold red]")
-            return None
-
-        console.log(f"Searching for optimal architecture in space: {search_space}...")
-        model = SearchableArchitecture(search_space, num_layers=max_layers)
-
-        # This is a placeholder for a real DARTS implementation.
-        # In a real implementation, we would train the architecture weights.
-        console.log("Architecture search complete.")
+        model = find_best_architecture(train_sequences, train_labels)
         return model
 
     def augment_with_memory(self, input_size):
